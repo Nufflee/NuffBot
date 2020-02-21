@@ -1,0 +1,8 @@
+.idea/
+*.DotSettings*
+bin/
+obj/
+*.sqlite
+*.resx
+*.Designer.cs
+*.env
