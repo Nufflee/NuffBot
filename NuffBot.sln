@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuffBot", "NuffBot\NuffBot.csproj", "{260CFC63-8387-4230-A0AD-C9346F954EA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuffBot.Tests", "NuffBot.Tests\NuffBot.Tests.csproj", "{C1B26CCA-C489-4C6A-8591-BA0055A210BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{260CFC63-8387-4230-A0AD-C9346F954EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{260CFC63-8387-4230-A0AD-C9346F954EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{260CFC63-8387-4230-A0AD-C9346F954EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1B26CCA-C489-4C6A-8591-BA0055A210BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B26CCA-C489-4C6A-8591-BA0055A210BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B26CCA-C489-4C6A-8591-BA0055A210BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B26CCA-C489-4C6A-8591-BA0055A210BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
