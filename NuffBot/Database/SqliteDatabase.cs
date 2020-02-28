@@ -12,7 +12,7 @@ namespace NuffBot
   {
     private static SqliteDatabase instance;
 
-    public static SqliteDatabase Instance => instance ?? (instance = new SqliteDatabase("database.sqlite"));
+    public static SqliteDatabase Instance => instance ?? (instance = new SqliteDatabase("../../../database.sqlite"));
 
     public IDbConnection Connection { get; }
 
@@ -20,6 +20,11 @@ namespace NuffBot
     {
       OrmLiteConnectionFactory factory = new OrmLiteConnectionFactory(path, SqliteOrmLiteDialectProvider.Instance);
       Connection = factory.OpenDbConnection();
+
+      if (Connection.State != ConnectionState.Open)
+      {
+        Console.WriteLine("Failed to connect to the database!");
+      }
 
       foreach (Type tableType in AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => typeof(IDatabaseObject).IsAssignableFrom(t) && !t.IsInterface).ToArray())
       {
@@ -40,19 +45,19 @@ namespace NuffBot
       return await Connection.DeleteAsync(entity) > 0;
     }
 
-    public async Task<T> ReadAsync<T>(uint id) 
+    public async Task<T> ReadAsync<T>(uint id)
       where T : class, IDatabaseObject
     {
       return await Connection.LoadSingleByIdAsync<T>(id);
     }
 
-    public async Task<List<T>> ReadAllAsync<T>() 
+    public async Task<List<T>> ReadAllAsync<T>()
       where T : class, IDatabaseObject
     {
       return await Connection.LoadSelectAsync(Connection.From<T>());
     }
 
-    public async Task<List<T>> ReadAllAsync<T>(uint id) 
+    public async Task<List<T>> ReadAllAsync<T>(uint id)
       where T : class, IDatabaseObject
     {
       return await Connection.LoadSelectAsync<T>(x => x.Id == id);
