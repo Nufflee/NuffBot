@@ -89,24 +89,5 @@ namespace NuffBot.Tests
 
       Assert.Equal(expectedArray, array);
     }
-    
-    [Theory]
-    [InlineData("!addcmd test [       alias1           ,                  alias2]          This is a test command.", "test", new[] {"alias1", "alias2"}, "This is a test command.")]
-    public void TestAddCommandParsing(string command, string expectedName, string[] expectedAliases, string expectedResponse)
-    {
-      CommandParser parser = CommandParser.TryCreate(command);
-
-      string name;
-      string[] aliases;
-      string response;
-
-      name = parser.ParseWord();
-      aliases = parser.ParseArray();
-      response = parser.ParseRest();
-
-      Assert.Equal(expectedName, name);
-      Assert.Equal(expectedAliases, aliases);
-      Assert.Equal(expectedResponse, response);
-    }
   }
 }
