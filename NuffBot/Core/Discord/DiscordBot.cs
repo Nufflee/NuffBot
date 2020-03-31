@@ -51,14 +51,14 @@ namespace NuffBot.Discord
       return Task.CompletedTask;
     }
 
-    public override void SendMessage(string message, CommandContext context)
+    public override async void SendMessage(string message, CommandContext context)
     {
-      ((DiscordCommandContext) context).DiscordChannel.SendMessageAsync(message).Wait();
+      await ((DiscordCommandContext) context).DiscordChannel.SendMessageAsync(message);
     }
 
-    public override void SendPrivateMessage(User receiver, string message, CommandContext context)
+    public override async void SendPrivateMessage(User receiver, string message, CommandContext context)
     {
-      ((DiscordCommandContext) context).DiscordChannel.GetUserAsync(receiver.Id).Result.SendMessageAsync(message);
+      await (await ((DiscordCommandContext) context).DiscordChannel.GetUserAsync(receiver.Id)).SendMessageAsync(message);
     }
   }
 }
