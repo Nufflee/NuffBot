@@ -11,13 +11,11 @@ namespace NuffBot
 {
   public class SqliteDatabase : IDatabaseContext
   {
-    private static SqliteDatabase instance;
-
-    public static SqliteDatabase Instance => instance ?? (instance = new SqliteDatabase("../../../database.sqlite"));
+    public static SqliteDatabase Instance { get; private set; }
 
     public IDbConnection Connection { get; }
 
-    public SqliteDatabase(string path)
+    private SqliteDatabase(string path)
     {
       OrmLiteConnectionFactory factory = new OrmLiteConnectionFactory(path, SqliteOrmLiteDialectProvider.Instance);
       Connection = factory.OpenDbConnection();
@@ -31,6 +29,11 @@ namespace NuffBot
       {
         Connection.CreateTableIfNotExists(tableType);
       }
+    }
+
+    public static void Connect(string path)
+    {
+      Instance = new SqliteDatabase(path);
     }
 
     public async Task<bool> WriteAsync<T>(T entity)

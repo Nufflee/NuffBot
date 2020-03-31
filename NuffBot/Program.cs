@@ -9,6 +9,7 @@ namespace NuffBot
     private static async Task Main(string[] args)
     {
       DotNetEnv.Env.Load();
+      SqliteDatabase.Connect("../../../database.sqlite");
 
       new Thread(() => { new TwitchBot(); }).Start();
 
