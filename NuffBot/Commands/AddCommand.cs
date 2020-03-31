@@ -5,7 +5,7 @@ namespace NuffBot.Commands
     public override string Name => "addcmd";
     public override UserLevel UserLevel => UserLevel.God;
 
-    private const string Usage = "Usage: !addcmd <name> [<aliases>] <response> - Adds a command to the database.";
+    private const string Usage = "Usage: !addcmd <name> [aliases[]] <response> - Adds a command to the database.";
 
     protected override async void Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
     {
