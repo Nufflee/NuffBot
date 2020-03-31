@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using NuffBot.Core;
 using NuffBot.Discord;
-using ServiceStack.OrmLite;
 
 namespace NuffBot.Commands
 {

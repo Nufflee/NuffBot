@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Net.Sockets;
 using Discord.WebSocket;
 using NuffBot.Core;
 

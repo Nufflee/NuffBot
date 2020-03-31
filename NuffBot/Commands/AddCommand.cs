@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace NuffBot.Commands
 {
   public class AddCommand : Command

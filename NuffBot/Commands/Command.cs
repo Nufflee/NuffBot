@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Discord.WebSocket;
 using NuffBot.Core;
 using NuffBot.Core.Twitch;
 using NuffBot.Discord;

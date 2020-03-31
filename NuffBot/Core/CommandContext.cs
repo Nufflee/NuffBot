@@ -1,5 +1,4 @@
 using Discord;
-using NuffBot.Discord;
 using TwitchLib.Api.V5.Models.Channels;
 
 namespace NuffBot
