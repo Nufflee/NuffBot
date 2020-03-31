@@ -20,13 +20,18 @@ namespace NuffBot.Discord
     {
       client = new DiscordSocketClient();
 
+      Connect();
+    }
+
+    private async void Connect()
+    {
       client.LoginAsync(TokenType.Bot, Configuration.DiscordToken).Wait();
-      client.StartAsync().Wait();
+      await client.StartAsync();
 
       client.Ready += WhenReady;
       client.MessageReceived += OnMessageReceived;
     }
-
+    
     private Task WhenReady()
     {
       Console.WriteLine($"Discord bot connected!");
