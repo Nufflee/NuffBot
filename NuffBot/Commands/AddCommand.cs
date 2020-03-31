@@ -7,7 +7,7 @@ namespace NuffBot.Commands
     public override string Name => "addcmd";
     public override UserLevel UserLevel => UserLevel.God;
 
-    private const string usage = "Usage: !addcmd <name> [<aliases>] <response> - Adds a command to the database.";
+    private const string Usage = "Usage: !addcmd <name> [<aliases>] <response> - Adds a command to the database.";
 
     protected override async void Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
     {
@@ -15,7 +15,7 @@ namespace NuffBot.Commands
 
       if (parser == null)
       {
-        bot.SendMessage(usage, context);
+        bot.SendMessage(Usage, context);
 
         return;
       }
@@ -33,14 +33,14 @@ namespace NuffBot.Commands
       catch (CommandParseError error)
       {
         bot.SendMessage(error.Message, context);
-        bot.SendMessage(usage, context);
+        bot.SendMessage(Usage, context);
 
         return;
       }
 
       DatabaseCommand command = new DatabaseCommand(name, aliases, response);
 
-      if ((await SqliteDatabase.Instance.ReadAllAsync<DatabaseCommand>()).Any((dbCommand) => dbCommand.Name == command.Name))
+      if (SqliteDatabase.Instance.Select<DatabaseCommand>((dbCommand) => dbCommand.Name == command.Name).Count > 0)
       {
         bot.SendMessage($"Command with name '{name}' already exists!", context);
 
