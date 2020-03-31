@@ -38,7 +38,7 @@ namespace NuffBot
 
     public async Task<bool> WriteAsync<T>(T entity)
       where T : class, IDatabaseObject
-    {
+    { 
       return await Connection.SaveAsync(entity, true);
     }
 
@@ -70,6 +70,11 @@ namespace NuffBot
     public List<T> Select<T>(Expression<Func<T, bool>> predicate)
     {
       return Connection.Select(predicate);
+    }
+
+    public bool Update<T>(T entity)
+    {
+      return Connection.Update(entity) == 1;
     }
     
     public void Dispose()
