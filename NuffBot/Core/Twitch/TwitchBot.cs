@@ -3,7 +3,6 @@ using System.Diagnostics;
 using NuffBot.Commands;
 using NuffBot.Core;
 using NuffBot.Core.Twitch;
-using ServiceStack;
 using TwitchLib.Api;
 using TwitchLib.Api.V5.Models.Channels;
 using TwitchLib.Client;
@@ -63,7 +62,7 @@ namespace NuffBot
         CommandProcessor.ProcessCommand(new TwitchChatMessage(message), this);
       }
 
-      Console.WriteLine(sw.ElapsedMilliseconds);
+      Console.WriteLine($"It took {sw.ElapsedMilliseconds} ms to process Twitch message");
     }
 
     private void OnJoinedChannel(object sender, OnJoinedChannelArgs args)

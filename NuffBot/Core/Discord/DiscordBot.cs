@@ -2,8 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
-using Discord.Rest;
 using Discord.WebSocket;
 using NuffBot.Commands;
 using NuffBot.Core;
@@ -48,7 +46,7 @@ namespace NuffBot.Discord
         CommandProcessor.ProcessCommand(new DiscordChatMessage(message), this);
       }
 
-      Console.WriteLine(sw.ElapsedMilliseconds);
+      Console.WriteLine($"It took {sw.ElapsedMilliseconds} ms to process Discord message.");
 
       return Task.CompletedTask;
     }

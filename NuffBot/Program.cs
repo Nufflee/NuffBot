@@ -12,10 +12,6 @@ namespace NuffBot
     {
       DotNetEnv.Env.Load();
 
-      Console.WriteLine(Directory.GetCurrentDirectory());
-      
-      Console.WriteLine(Environment.GetEnvironmentVariable("TwitchChannelName"));
-      
       new Thread(() => { new TwitchBot(); }).Start();
 
       new Thread(() => { new DiscordBot(); }).Start();

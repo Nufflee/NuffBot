@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.Sqlite;
@@ -63,6 +64,11 @@ namespace NuffBot
       return await Connection.LoadSelectAsync<T>(x => x.Id == id);
     }
 
+    public List<T> Select<T>(Expression<Func<T, bool>> predicate)
+    {
+      return Connection.Select(predicate);
+    }
+    
     public void Dispose()
     {
       Connection?.Dispose();
