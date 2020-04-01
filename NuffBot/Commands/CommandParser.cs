@@ -30,6 +30,11 @@ namespace NuffBot.Commands
       };
     }
 
+    public string[] ParseArguments()
+    {
+      return command.Split(' ').Skip(1).ToArray();
+    }
+
     public string ParseWord(params char[] endChars)
     {
       EatWhiteSpace();
