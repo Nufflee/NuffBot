@@ -39,9 +39,9 @@ namespace NuffBot.Commands
         return;
       }
 
-      DatabaseCommand command = SqliteDatabase.Instance.Select<DatabaseCommand>((dbCommand) => dbCommand.Name == name).FirstOrDefault();
-      
-      if (command == null)
+      DatabaseObject<DatabaseCommand> dbObject = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>((dbCommand) => dbCommand.Name == name);
+
+      if (dbObject.Entity == null)
       {
         bot.SendMessage($"Command with name '{name}' doesn't exists!", context);
 
@@ -50,12 +50,12 @@ namespace NuffBot.Commands
 
       if (aliases != null)
       {
-        command.Aliases = aliases;
+        dbObject.Entity.Aliases = aliases;
       }
 
-      command.Response = response;
+      dbObject.Entity.Response = response;
 
-      if (SqliteDatabase.Instance.Update(command))
+      if (await dbObject.UpdateInDatabase(SqliteDatabase.Instance))
       {
         bot.SendMessage($"Command '{name}' updated successfully!", context);
       }

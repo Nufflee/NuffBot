@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace NuffBot
@@ -12,13 +13,16 @@ namespace NuffBot
     Task<bool> DeleteAsync<T>(T entity)
       where T : class, IDatabaseObject;
 
-    Task<T> ReadAsync<T>(uint id)
+    Task<DatabaseObject<T>> ReadSingleAsync<T>(Expression<Func<T, bool>> predicate)
       where T : class, IDatabaseObject;
 
-    Task<List<T>> ReadAllAsync<T>()
+    Task<List<DatabaseObject<T>>> ReadAllAsync<T>()
       where T : class, IDatabaseObject;
 
-    Task<List<T>> ReadAllAsync<T>(uint id)
+    Task<List<DatabaseObject<T>>> ReadAllAsync<T>(Expression<Func<T, bool>> predicate)
+      where T : class, IDatabaseObject;
+
+    Task<bool> UpdateAsync<T>(T entity)
       where T : class, IDatabaseObject;
   }
 }
