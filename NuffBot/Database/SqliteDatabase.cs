@@ -42,11 +42,18 @@ namespace NuffBot
       return await Connection.SaveAsync(entity, true);
     }
 
-    public async Task<bool> DeleteAsync<T>(T entity)
+    public async Task<bool> DeleteEntityAsync<T>(T entity)
       where T : class, IDatabaseObject
     {
       // This may need to be != 0.
       return await Connection.DeleteAsync(entity) > 0;
+    }
+    
+    public async Task<bool> DeleteAsync<T>(Expression<Func<T, bool>> predicate)
+      where T : class, IDatabaseObject
+    {
+      // This may need to be != 0.
+      return await Connection.DeleteAsync(predicate) > 0;
     }
 
     public async Task<DatabaseObject<T>> ReadSingleAsync<T>(Expression<Func<T, bool>> predicate)
