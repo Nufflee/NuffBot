@@ -1,5 +1,4 @@
-using System;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace NuffBot.Commands
 {
@@ -10,7 +9,7 @@ namespace NuffBot.Commands
 
     private const string Usage = "Usage: !updatecmd <name> [aliases[]] <response> - Updates an existing command. If no aliases are specified, it doesn't touch them. Otherwise it overrides them.";
 
-    protected override void Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
+    protected override async Task Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
     {
       CommandParser parser = CommandParser.TryCreate(message.Content);
 

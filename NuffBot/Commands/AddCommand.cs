@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace NuffBot.Commands
 {
   public class AddCommand : Command
@@ -8,7 +10,7 @@ namespace NuffBot.Commands
 
     private const string Usage = "Usage: !addcmd <name> [aliases[]] <response> - Adds a command to the database.";
 
-    protected override async void Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
+    protected override async Task Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
     {
       CommandParser parser = CommandParser.TryCreate(message.Content);
 

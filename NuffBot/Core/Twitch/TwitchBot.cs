@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using NuffBot.Commands;
 using NuffBot.Core;
 using NuffBot.Core.Twitch;
@@ -59,7 +60,7 @@ namespace NuffBot
 
       if (message.Message.StartsWith("!"))
       {
-        CommandProcessor.ProcessCommand(new TwitchChatMessage(message), this);
+        CommandProcessor.ProcessCommand(new TwitchChatMessage(message), this).Wait();
       }
 
       Console.WriteLine($"It took {sw.ElapsedMilliseconds} ms to process Twitch message");
