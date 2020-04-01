@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using NuffBot.Core;
 using NuffBot.Core.Twitch;
 using NuffBot.Discord;
@@ -27,9 +28,10 @@ namespace NuffBot.Commands
       }
     }
 
-    protected virtual void Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
+    protected virtual Task Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
       where T : User
     {
+      return Task.CompletedTask;
     }
 
     protected virtual void ExecuteTwitch(TwitchChatMessage message, CommandContext context, TwitchBot bot)

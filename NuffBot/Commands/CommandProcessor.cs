@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using NuffBot.Core;
 using NuffBot.Discord;
 
@@ -16,7 +17,7 @@ namespace NuffBot.Commands
       staticCommands = Assembly.GetExecutingAssembly().GetTypes().Where(type => typeof(Command).IsAssignableFrom(type) && type != typeof(Command)).Select(Activator.CreateInstance).Cast<Command>().ToList();
     }
 
-    public static void ProcessCommand<TUser>(ChatMessage<TUser> chatMessage, Bot bot)
+    public static async Task ProcessCommand<TUser>(ChatMessage<TUser> chatMessage, Bot bot)
       where TUser : User
     {
       if (chatMessage.Sender.Id == bot.Id)
@@ -43,11 +44,11 @@ namespace NuffBot.Commands
       
       if (commandToExecute == null)
       {
-        DatabaseCommand dbCommand = SqliteDatabase.Instance.Select<DatabaseCommand>(c => c.Name == name).FirstOrDefault();
+        DatabaseObject<DatabaseCommand> dbCommand = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>(c => c.Name == name);
         
-        if (dbCommand != null)
+        if (dbCommand.Entity != null)
         {
-          bot.SendMessage(dbCommand.Response, context);
+          bot.SendMessage(dbCommand.Entity.Response, context);
         }
 
         return;

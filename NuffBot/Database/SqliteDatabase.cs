@@ -49,29 +49,38 @@ namespace NuffBot
       return await Connection.DeleteAsync(entity) > 0;
     }
 
-    public async Task<T> ReadAsync<T>(uint id)
+    public async Task<DatabaseObject<T>> ReadSingleAsync<T>(Expression<Func<T, bool>> predicate)
       where T : class, IDatabaseObject
     {
-      return await Connection.LoadSingleByIdAsync<T>(id);
+      T item = await Connection.SingleAsync(predicate);
+      
+      return new DatabaseObject<T>(item);
     }
 
-    public async Task<List<T>> ReadAllAsync<T>()
+    public async Task<List<DatabaseObject<T>>> ReadAllAsync<T>()
       where T : class, IDatabaseObject
     {
-      return await Connection.LoadSelectAsync(Connection.From<T>());
+      List<T> items = await Connection.LoadSelectAsync(Connection.From<T>());
+      
+      return items.Select((x) => new DatabaseObject<T>(x)).ToList();
     }
 
-    public async Task<List<T>> ReadAllAsync<T>(uint id)
+    public async Task<List<DatabaseObject<T>>> ReadAllAsync<T>(Expression<Func<T, bool>> predicate)
       where T : class, IDatabaseObject
     {
-      return await Connection.LoadSelectAsync<T>(x => x.Id == id);
+      List<T> items = await Connection.LoadSelectAsync<T>(predicate);
+      
+      return items.Select((x) => new DatabaseObject<T>(x)).ToList();
     }
 
-    public List<T> Select<T>(Expression<Func<T, bool>> predicate)
+    public async Task<bool> UpdateAsync<T>(T entity)
+      where T : class, IDatabaseObject
     {
-      return Connection.Select(predicate);
+      int result = await Connection.UpdateAsync(entity);
+      
+      return result == 1;
     }
-    
+
     public void Dispose()
     {
       Connection?.Dispose();

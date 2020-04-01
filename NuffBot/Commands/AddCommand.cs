@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace NuffBot.Commands
 {
   public class AddCommand : Command
@@ -7,7 +10,7 @@ namespace NuffBot.Commands
 
     private const string Usage = "Usage: !addcmd <name> [aliases[]] <response> - Adds a command to the database.";
 
-    protected override async void Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
+    protected override async Task Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
     {
       CommandParser parser = CommandParser.TryCreate(message.Content);
 
@@ -37,8 +40,9 @@ namespace NuffBot.Commands
       }
 
       DatabaseCommand command = new DatabaseCommand(name, aliases, response);
-
-      if (SqliteDatabase.Instance.Select<DatabaseCommand>((dbCommand) => dbCommand.Name == command.Name).Count > 0)
+      List<DatabaseObject<DatabaseCommand>> duplicateCommands = await SqliteDatabase.Instance.ReadAllAsync<DatabaseCommand>((dbCommand) => dbCommand.Name == command.Name);
+      
+      if (duplicateCommands.Count > 0)
       {
         bot.SendMessage($"Command with name '{name}' already exists!", context);
 

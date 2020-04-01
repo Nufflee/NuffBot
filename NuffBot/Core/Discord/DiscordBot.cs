@@ -42,18 +42,16 @@ namespace NuffBot.Discord
       return Task.CompletedTask;
     }
 
-    private Task OnMessageReceived(SocketMessage message)
+    private async Task OnMessageReceived(SocketMessage message)
     {
       Stopwatch sw = Stopwatch.StartNew();
 
       if (message.Content.StartsWith("!"))
       {
-        CommandProcessor.ProcessCommand(new DiscordChatMessage(message), this);
+        await CommandProcessor.ProcessCommand(new DiscordChatMessage(message), this);
       }
 
       Console.WriteLine($"It took {sw.ElapsedMilliseconds} ms to process Discord message.");
-
-      return Task.CompletedTask;
     }
 
     public override async void SendMessage(string message, CommandContext context)
