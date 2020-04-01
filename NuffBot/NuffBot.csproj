@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Copy SourceFiles="$(ProjectDir)../.env" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+        <Copy SourceFiles="$(ProjectDir)../.env" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" ContinueOnError="true" />
     </Target>
     
     <ItemGroup>
