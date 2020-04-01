@@ -10,7 +10,10 @@ namespace NuffBot
     Task<bool> WriteAsync<T>(T entity)
       where T : class, IDatabaseObject;
 
-    Task<bool> DeleteAsync<T>(T entity)
+    Task<bool> DeleteEntityAsync<T>(T entity)
+      where T : class, IDatabaseObject;
+
+    Task<bool> DeleteAsync<T>(Expression<Func<T, bool>> predicate)
       where T : class, IDatabaseObject;
 
     Task<DatabaseObject<T>> ReadSingleAsync<T>(Expression<Func<T, bool>> predicate)
