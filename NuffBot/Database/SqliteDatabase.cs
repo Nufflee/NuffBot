@@ -75,8 +75,8 @@ namespace NuffBot
     public async Task<List<DatabaseObject<T>>> ReadAllAsync<T>(Expression<Func<T, bool>> predicate)
       where T : class, IDatabaseObject
     {
-      List<T> items = await Connection.LoadSelectAsync<T>(predicate);
-      
+      List<T> items = await Connection.LoadSelectAsync(predicate);
+
       return items.Select((x) => new DatabaseObject<T>(x)).ToList();
     }
 

@@ -24,7 +24,7 @@ namespace NuffBot.Commands
       {
         return;
       }
-      
+
       string message = chatMessage.Content;
       string name = message.TrimStart('!').Split(' ')[0].ToLower();
 
@@ -41,15 +41,24 @@ namespace NuffBot.Commands
       {
         context = new DiscordCommandContext(context, discordChatMessage.Channel);
       }
-      
+
       if (commandToExecute == null)
       {
         DatabaseObject<DatabaseCommand> dbCommand = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>(c => c.Name == name);
-        
-        if (dbCommand.Entity != null)
+
+        if (dbCommand.Entity == null)
         {
-          bot.SendMessage(dbCommand.Entity.Response, context);
+          List<DatabaseObject<DatabaseCommand>> allCommands = await SqliteDatabase.Instance.ReadAllAsync<DatabaseCommand>();
+
+          dbCommand = allCommands.FirstOrDefault(db => db.Entity.Aliases.Contains(name));
+
+          if (dbCommand == null)
+          {
+            return;
+          }
         }
+
+        bot.SendMessage(dbCommand.Entity.Response, context);
 
         return;
       }
