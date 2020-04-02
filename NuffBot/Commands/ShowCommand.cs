@@ -5,7 +5,7 @@ namespace NuffBot.Commands
   public class ShowCommand : Command
   {
     public override string Name => "showcmd";
-    public override UserLevel UserLevel => UserLevel.God;
+    public override UserLevel UserLevel => UserLevel.Viewer;
 
     private const string Usage = "Usage: !showcmd <name> - Shows internal representation of a command (currently only support text/database commands - more information: https://github.com/Nufflee/NuffBot/issues/23).";
 
