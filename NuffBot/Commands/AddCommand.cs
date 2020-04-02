@@ -39,6 +39,8 @@ namespace NuffBot.Commands
         return;
       }
 
+      aliases ??= new string[0];
+      
       DatabaseCommand command = new DatabaseCommand(name, aliases, response);
       List<DatabaseObject<DatabaseCommand>> duplicateCommands = await SqliteDatabase.Instance.ReadAllAsync<DatabaseCommand>((dbCommand) => dbCommand.Name == command.Name);
       
