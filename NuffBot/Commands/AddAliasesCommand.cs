@@ -1,4 +1,4 @@
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NuffBot.Commands
@@ -6,6 +6,7 @@ namespace NuffBot.Commands
   public class AddAliasesCommand : Command
   {
     public override string Name => "addaliases";
+    public override IEnumerable<string> Aliases => new[] {"addalias"};
     public override UserLevel UserLevel => UserLevel.God;
 
     private const string Usage = "Usage: !addaliases <name> <aliases[]> - Adds new alises to the specified command.";
