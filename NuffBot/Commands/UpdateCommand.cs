@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NuffBot.Commands
@@ -49,7 +50,7 @@ namespace NuffBot.Commands
 
       if (aliases != null)
       {
-        dbObject.Entity.Aliases = aliases;
+        dbObject.Entity.Aliases = aliases.ToList();
       }
 
       dbObject.Entity.Response = response;

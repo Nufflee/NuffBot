@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NuffBot.Commands
@@ -41,7 +42,7 @@ namespace NuffBot.Commands
 
       aliases ??= new string[0];
       
-      DatabaseCommand command = new DatabaseCommand(name, aliases, response);
+      DatabaseCommand command = new DatabaseCommand(name, aliases.ToList(), response);
       List<DatabaseObject<DatabaseCommand>> duplicateCommands = await SqliteDatabase.Instance.ReadAllAsync<DatabaseCommand>((dbCommand) => dbCommand.Name == command.Name);
       
       if (duplicateCommands.Count > 0)
