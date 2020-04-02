@@ -47,7 +47,7 @@ namespace NuffBot.Commands
         return;
       }
 
-      dbObject.Entity.Aliases = dbObject.Entity.Aliases.Concat(aliases).ToArray();
+      dbObject.Entity.Aliases.AddRange(aliases);
 
       if (await dbObject.UpdateInDatabase(SqliteDatabase.Instance))
       {
