@@ -47,7 +47,7 @@ namespace NuffBot.Commands
         
         if (dbObject == null)
         {
-          bot.SendMessage($"Command with alias '{alias}' doesn't exists!", context);
+          bot.SendMessage($"Command with alias '{alias}' doesn't exist!", context);
 
           continue;
         }

@@ -43,7 +43,7 @@ namespace NuffBot.Commands
 
       if (dbObject.Entity == null)
       {
-        bot.SendMessage($"Command with name '{name}' doesn't exists!", context);
+        bot.SendMessage($"Command with name '{name}' doesn't exist!", context);
 
         return;
       }
