@@ -29,12 +29,7 @@ namespace NuffBot.Commands
         currentPosition = startPosition
       };
     }
-
-    public string[] ParseArguments()
-    {
-      return command.Split(' ').Skip(1).ToArray();
-    }
-
+    
     public string ParseWord(params char[] endChars)
     {
       EatWhiteSpace();

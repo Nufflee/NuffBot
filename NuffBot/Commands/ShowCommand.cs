@@ -20,7 +20,7 @@ namespace NuffBot.Commands
         return;
       }
 
-      string name = parser.ParseArguments()[0];
+      string name = parser.ParseWord();
 
       DatabaseObject<DatabaseCommand> dbObject = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>((c) => c.Name == name);
 

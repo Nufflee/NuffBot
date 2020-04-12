@@ -20,7 +20,7 @@ namespace NuffBot.Commands
         return;
       }
 
-      string name = parser.ParseArguments()[0];
+      string name = parser.ParseWord();
 
       if (!await SqliteDatabase.Instance.DeleteAsync<DatabaseCommand>((c) => c.Name == name))
       {
