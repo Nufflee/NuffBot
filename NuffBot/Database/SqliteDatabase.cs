@@ -19,12 +19,14 @@ namespace NuffBot
     {
       OrmLiteConnectionFactory factory = new OrmLiteConnectionFactory(path, SqliteOrmLiteDialectProvider.Instance);
       Connection = factory.OpenDbConnection();
-
+      
       if (Connection.State != ConnectionState.Open)
       {
         Console.WriteLine("Failed to connect to the database!");
       }
 
+      Connection.ExecuteSql("PRAGMA foreign_keys = ON;");
+      
       foreach (Type tableType in AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => typeof(IDatabaseObject).IsAssignableFrom(t) && !t.IsInterface).ToArray())
       {
         Connection.CreateTableIfNotExists(tableType);
