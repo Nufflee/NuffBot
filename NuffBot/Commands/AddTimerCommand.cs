@@ -72,6 +72,8 @@ namespace NuffBot.Commands
       {
         bot.SendMessage($"Timer for command '{name}' added successfully!", context);
       }
+      
+      TwitchBot.TimerManager.ChooseNextTimer();
     }
   }
 }
