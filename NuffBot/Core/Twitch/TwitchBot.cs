@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using NuffBot.Commands;
 using NuffBot.Core;
 using NuffBot.Core.Twitch;
@@ -20,6 +19,8 @@ namespace NuffBot
 
     private readonly TwitchClient client;
     private readonly ConnectionCredentials credentials = new ConnectionCredentials(Configuration.TwitchBotUsername, Configuration.TwitchBotOAuth);
+
+    public static TimerManager TimerManager { get; private set; }
 
     public TwitchBot()
     {
@@ -58,6 +59,8 @@ namespace NuffBot
 
       ChatMessage message = args.ChatMessage;
 
+      TimerManager.MessageCount++;
+
       if (message.Message.StartsWith("!"))
       {
         CommandProcessor.ProcessCommand(new TwitchChatMessage(message), this).Wait();
@@ -70,6 +73,9 @@ namespace NuffBot
     {
       CurrentChannel = TwitchApi.V5.Channels.GetChannelByIDAsync(TwitchUser.GetByName(Configuration.TwitchChannelName).Id.ToString()).Result;
       Id = TwitchUser.GetByName(Configuration.TwitchBotUsername).Id;
+      
+      TimerManager = new TimerManager(this);
+      
       //SendMessage("Yo, yo! I'm back!");
     }
   }

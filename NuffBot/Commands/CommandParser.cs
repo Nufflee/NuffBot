@@ -29,13 +29,22 @@ namespace NuffBot.Commands
         currentPosition = startPosition
       };
     }
-    
-    public string ParseWord(params char[] endChars)
+
+    public string ParseOptionalWord() => ParseWord(true);
+
+    public string ParseWord(params char[] endChars) => ParseWord(false, endChars);
+
+    public string ParseWord(bool optional, params char[] endChars)
     {
       EatWhiteSpace();
 
       if (IsAtEnd())
       {
+        if (optional)
+        {
+          return null;
+        }
+
         throw new CommandParseError(CommandParseErrorKind.ExpectedWordAtEnd);
       }
 
@@ -55,7 +64,7 @@ namespace NuffBot.Commands
     }
 
     public string[] ParseOptionalArray() => ParseArray(true);
-    
+
     public string[] ParseArray(bool optional = false)
     {
       EatWhiteSpace();
@@ -66,7 +75,7 @@ namespace NuffBot.Commands
         {
           return null;
         }
-        
+
         throw new CommandParseError(CommandParseErrorKind.MissingOpeningBracket);
       }
 
@@ -148,7 +157,7 @@ namespace NuffBot.Commands
       {
         return false;
       }
-      
+
       if (CurrentChar == expected)
       {
         Advance();

@@ -16,5 +16,10 @@ namespace NuffBot
     {
       return await database.UpdateAsync(Entity);
     }
+    
+    public async Task<bool> DeleteFromDatabase(IDatabaseContext database)
+    {
+      return await database.DeleteEntityAsync(Entity);
+    }
   }
 }
