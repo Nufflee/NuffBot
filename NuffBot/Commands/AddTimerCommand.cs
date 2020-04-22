@@ -53,6 +53,13 @@ namespace NuffBot.Commands
         return;
       }
 
+      if (timeTrigger == 0 && messageTrigger == 0)
+      {
+        bot.SendMessage("'time' and 'messages' parameters can't both be 0.", context);
+
+        return;
+      }
+
       DatabaseObject<DatabaseCommand> dbObject = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>((c) => c.Name == name);
 
       if (dbObject.Entity == null)
@@ -72,7 +79,7 @@ namespace NuffBot.Commands
       {
         bot.SendMessage($"Timer for command '{name}' added successfully!", context);
       }
-      
+
       TwitchBot.TimerManager.ChooseNextTimer();
     }
   }
