@@ -14,6 +14,11 @@ namespace NuffBot.Core
       {
         messageCount = value;
 
+        if (currentTimer == null)
+        {
+          return;
+        }
+        
         if (currentTimer.MessageTrigger != 0 && messageCount >= currentTimer.MessageTrigger)
         {
           triggerTimer?.Stop();
