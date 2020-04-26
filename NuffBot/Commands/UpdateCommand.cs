@@ -51,6 +51,16 @@ namespace NuffBot.Commands
       if (aliases != null)
       {
         dbObject.Entity.Aliases = aliases.ToList();
+        
+        foreach (string alias in aliases)
+        {
+          if ((await DatabaseHelper.GetCommandByNameOrAlias(alias)).Exists())
+          {
+            bot.SendMessage($"Command with name or alias '{alias}' already exists!", context);
+
+            return;
+          }
+        }
       }
 
       dbObject.Entity.Response = response;
