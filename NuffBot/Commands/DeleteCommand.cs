@@ -35,14 +35,14 @@ namespace NuffBot.Commands
       }
 
       DatabaseObject<CommandModel> dbObject = await DatabaseHelper.GetCommandByNameOrAlias(name);
-      
+
       if (!dbObject.Exists())
       {
         bot.SendMessage($"Command with name or alias '{name}' doesn't exist!", context);
 
         return;
       }
-      
+
       if (!await dbObject.DeleteFromDatabase(SqliteDatabase.Instance))
       {
         bot.SendMessage("Failed to delete command from the database.", context);

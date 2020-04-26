@@ -34,12 +34,14 @@ namespace NuffBot.Commands
       return Task.CompletedTask;
     }
 
-    protected virtual void ExecuteTwitch(TwitchChatMessage message, CommandContext context, TwitchBot bot)
+    protected virtual Task ExecuteTwitch(TwitchChatMessage message, CommandContext context, TwitchBot bot)
     {
+      return Task.CompletedTask;
     }
 
-    protected virtual void ExecuteDiscord(DiscordChatMessage message, DiscordCommandContext context, DiscordBot bot)
+    protected virtual Task ExecuteDiscord(DiscordChatMessage message, DiscordCommandContext context, DiscordBot bot)
     {
+      return Task.CompletedTask;
     }
   }
 }
