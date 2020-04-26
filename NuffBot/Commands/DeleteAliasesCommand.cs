@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NuffBot.Commands
@@ -37,14 +36,12 @@ namespace NuffBot.Commands
         return;
       }
 
-      List<DatabaseObject<DatabaseCommand>> allCommands = await SqliteDatabase.Instance.ReadAllAsync<DatabaseCommand>();
-
       int count = 0;
-      
+
       foreach (string alias in aliases)
       {
-        DatabaseObject<DatabaseCommand> dbObject = allCommands.FirstOrDefault(db => db.Entity.Aliases.Contains(alias));
-        
+        DatabaseObject<CommandModel> dbObject = await DatabaseHelper.GetCommandByAlias(alias);
+
         if (dbObject == null)
         {
           bot.SendMessage($"Command with alias '{alias}' doesn't exist!", context);
@@ -62,7 +59,11 @@ namespace NuffBot.Commands
 
       if (count == aliases.Length)
       {
-        bot.SendMessage("Alias(es) removed successfully!", context);
+        bot.SendMessage($"{count} alias(es) removed successfully!", context);
+      }
+      else
+      {
+        bot.SendMessage($"Failed to remove {aliases.Length - count} alias(es)!", context);
       }
     }
   }

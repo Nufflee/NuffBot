@@ -20,11 +20,23 @@ namespace NuffBot.Commands
         return;
       }
 
-      string name = parser.ParseWord();
+      string name;
 
-      DatabaseObject<DatabaseCommand> dbObject = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>((c) => c.Name == name);
+      try
+      {
+        name = parser.ParseWord();
+      }
+      catch (CommandParseError error)
+      {
+        bot.SendMessage(error.Message, context);
+        bot.SendMessage(Usage, context);
 
-      if (dbObject.Entity == null)
+        return;
+      }
+
+      DatabaseObject<CommandModel> dbObject = await DatabaseHelper.GetCommandByNameOrAlias(name);
+
+      if (!dbObject.Exists())
       {
         bot.SendMessage($"Command with name '{name}' doesn't exist!", context);
 

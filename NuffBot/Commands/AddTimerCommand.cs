@@ -60,16 +60,16 @@ namespace NuffBot.Commands
         return;
       }
 
-      DatabaseObject<DatabaseCommand> dbObject = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>((c) => c.Name == name);
+      DatabaseObject<CommandModel> dbObject = await DatabaseHelper.GetCommandByNameOrAlias(name);
 
-      if (dbObject.Entity == null)
+      if (!dbObject.Exists())
       {
-        bot.SendMessage($"Command with name '{name}' doesn't exist!", context);
+        bot.SendMessage($"Command or alias with name '{name}' doesn't exist!", context);
 
         return;
       }
 
-      Timer timer = new Timer(dbObject.Entity.Id, timeTrigger, messageTrigger);
+      TimerModel timer = new TimerModel(dbObject.Entity.Id, timeTrigger, messageTrigger);
 
       if (!await timer.SaveToDatabase(SqliteDatabase.Instance))
       {

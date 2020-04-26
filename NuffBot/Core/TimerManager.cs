@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 using NuffBot.Commands;
 using NuffBot.Discord;
 
@@ -28,10 +29,10 @@ namespace NuffBot.Core
       }
     }
 
-    private Timer currentTimer;
+    private TimerModel currentTimer;
     private int messageCount;
     private readonly Bot bot;
-    private System.Timers.Timer triggerTimer;
+    private Timer triggerTimer;
 
     public TimerManager(Bot bot)
     {
@@ -49,7 +50,7 @@ namespace NuffBot.Core
 
       triggerTimer?.Stop();
 
-      List<DatabaseObject<Timer>> timers = await SqliteDatabase.Instance.ReadAllAsync<Timer>();
+      List<DatabaseObject<TimerModel>> timers = await DatabaseHelper.GetAllTimers();
 
       // Make sure to not select the same timer twice in a row (if more than 1 is present).
       if (timers.Count > 1)
@@ -71,7 +72,7 @@ namespace NuffBot.Core
           return;
         }
 
-        triggerTimer = new System.Timers.Timer(currentTimer.TimeTrigger * 1000);
+        triggerTimer = new Timer(currentTimer.TimeTrigger * 1000);
 
         triggerTimer.Start();
 
@@ -79,9 +80,9 @@ namespace NuffBot.Core
       }
     }
 
-    private async void ExecuteTimer(Timer timer)
+    private async void ExecuteTimer(TimerModel timer)
     {
-      DatabaseObject<DatabaseCommand> command = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>((c) => c.Id == timer.CommandId);
+      DatabaseObject<CommandModel> command = await DatabaseHelper.GetCommandById(timer.CommandId);
 
       bot.SendMessage(command.Entity.Response, new CommandContext(DiscordBot.CurrentGuild, TwitchBot.CurrentChannel));
 

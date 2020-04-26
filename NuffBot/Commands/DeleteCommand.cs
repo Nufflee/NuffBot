@@ -20,9 +20,30 @@ namespace NuffBot.Commands
         return;
       }
 
-      string name = parser.ParseWord();
+      string name;
 
-      if (!await SqliteDatabase.Instance.DeleteAsync<DatabaseCommand>((c) => c.Name == name))
+      try
+      {
+        name = parser.ParseWord();
+      }
+      catch (CommandParseError error)
+      {
+        bot.SendMessage(error.Message, context);
+        bot.SendMessage(Usage, context);
+
+        return;
+      }
+
+      DatabaseObject<CommandModel> dbObject = await DatabaseHelper.GetCommandByNameOrAlias(name);
+      
+      if (!dbObject.Exists())
+      {
+        bot.SendMessage($"Command with name or alias '{name}' doesn't exist!", context);
+
+        return;
+      }
+      
+      if (!await dbObject.DeleteFromDatabase(SqliteDatabase.Instance))
       {
         bot.SendMessage("Failed to delete command from the database.", context);
       }

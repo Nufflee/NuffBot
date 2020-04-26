@@ -8,7 +8,7 @@ namespace NuffBot.Commands
     public override string Name => "showtimer";
     public override UserLevel UserLevel => UserLevel.Viewer;
 
-    private const string Usage = "Usage: !showcmd <name> - Shows internal representation of a timer.";
+    private const string Usage = "Usage: !showtimer <name> - Shows internal representation of a timer.";
 
     protected override async Task Execute<T>(ChatMessage<T> message, CommandContext context, Bot bot)
     {
@@ -35,18 +35,18 @@ namespace NuffBot.Commands
         return;
       }
 
-      DatabaseObject<DatabaseCommand> commandDbObject = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>((c) => c.Name == name);
+      DatabaseObject<CommandModel> commandDbObject = await DatabaseHelper.GetCommandByNameOrAlias(name);
 
-      if (commandDbObject.Entity == null)
+      if (!commandDbObject.Exists())
       {
         bot.SendMessage($"Timer '{name}' doesn't exist because there's no such command!", context);
 
         return;
       }
 
-      DatabaseObject<Timer> timerDbObject = await SqliteDatabase.Instance.ReadSingleAsync<Timer>((t) => t.CommandId == commandDbObject.Entity.Id);
+      DatabaseObject<TimerModel> timerDbObject = await DatabaseHelper.GetTimerByCommand(commandDbObject.Entity);
 
-      if (timerDbObject.Entity == null)
+      if (!timerDbObject.Exists())
       {
         bot.SendMessage($"Timer with name '{name}' doesn't exist!", context);
 

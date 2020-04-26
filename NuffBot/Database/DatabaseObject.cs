@@ -21,5 +21,10 @@ namespace NuffBot
     {
       return await database.DeleteEntityAsync(Entity);
     }
+
+    public bool Exists()
+    {
+      return Entity != null;
+    }
   }
 }
