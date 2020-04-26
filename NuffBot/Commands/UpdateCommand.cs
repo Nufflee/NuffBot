@@ -39,9 +39,9 @@ namespace NuffBot.Commands
         return;
       }
 
-      DatabaseObject<DatabaseCommand> dbObject = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>((dbCommand) => dbCommand.Name == name);
+      DatabaseObject<CommandModel> dbObject = await DatabaseHelper.GetCommandByNameOrAlias(name);
 
-      if (dbObject.Entity == null)
+      if (!dbObject.Exists())
       {
         bot.SendMessage($"Command with name '{name}' doesn't exist!", context);
 

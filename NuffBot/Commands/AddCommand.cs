@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -41,16 +40,23 @@ namespace NuffBot.Commands
       }
 
       aliases ??= new string[0];
-      
-      DatabaseCommand command = new DatabaseCommand(name, aliases.ToList(), response);
-      List<DatabaseObject<DatabaseCommand>> duplicateCommands = await SqliteDatabase.Instance.ReadAllAsync<DatabaseCommand>((dbCommand) => dbCommand.Name == command.Name);
-      
-      if (duplicateCommands.Count > 0)
+
+      if ((await DatabaseHelper.GetCommandByNameOrAlias(name)).Exists())
       {
-        bot.SendMessage($"Command with name '{name}' already exists!", context);
+        bot.SendMessage($"Command with name or alias '{name}' already exists!", context);
 
         return;
       }
+
+      foreach (string alias in aliases)
+      {
+        if ((await DatabaseHelper.GetCommandByAlias(alias)).Exists())
+        {
+          bot.SendMessage($"Command with name or alias '{alias}' already exists!", context);
+        }
+      }
+
+      CommandModel command = new CommandModel(name, aliases.ToList(), response);
 
       if (!await command.SaveToDatabase(SqliteDatabase.Instance))
       {

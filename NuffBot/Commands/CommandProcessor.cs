@@ -44,21 +44,12 @@ namespace NuffBot.Commands
 
       if (commandToExecute == null)
       {
-        DatabaseObject<DatabaseCommand> dbCommand = await SqliteDatabase.Instance.ReadSingleAsync<DatabaseCommand>(c => c.Name == name);
+        DatabaseObject<CommandModel> dbCommand = await DatabaseHelper.GetCommandByNameOrAlias(name);
 
-        if (dbCommand.Entity == null)
+        if (dbCommand.Exists())
         {
-          List<DatabaseObject<DatabaseCommand>> allCommands = await SqliteDatabase.Instance.ReadAllAsync<DatabaseCommand>();
-
-          dbCommand = allCommands.FirstOrDefault(db => db.Entity.Aliases.Contains(name));
-
-          if (dbCommand == null)
-          {
-            return;
-          }
+          bot.SendMessage(dbCommand.Entity.Response, context);
         }
-
-        bot.SendMessage(dbCommand.Entity.Response, context);
 
         return;
       }
