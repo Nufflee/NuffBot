@@ -60,44 +60,13 @@ namespace NuffBot.Commands
 
         if (userName == null)
         {
-          bot.SendMessage($"@{message.Sender.UserName} You have been following the channel for {FormatFollowage(followage)}.", context);
+          bot.SendMessage($"@{message.Sender.UserName} You have been following the channel for {Helpers.FormatTimeSpan(followage)}.", context);
         }
         else
         {
-          bot.SendMessage($"@{message.Sender.UserName} {userName} has been following the channel for {FormatFollowage(followage)}.", context);
+          bot.SendMessage($"@{message.Sender.UserName} {userName} has been following the channel for {Helpers.FormatTimeSpan(followage)}.", context);
         }
       }
-    }
-
-    private static string FormatFollowage(TimeSpan followage)
-    {
-      string formattedFollowage = "";
-      if (followage.Days / 365 > 0)
-      {
-        formattedFollowage += $"{followage.Days / 365} years, ";
-      }
-
-      if (followage.Days > 0)
-      {
-        formattedFollowage += $"{followage.Days % 365} days, ";
-      }
-
-      if (followage.Hours > 0)
-      {
-        formattedFollowage += $"{followage.Hours} hours, ";
-      }
-
-      if (followage.Minutes > 0)
-      {
-        formattedFollowage += $"{followage.Minutes} minutes and ";
-      }
-
-      if (followage.Seconds > 0)
-      {
-        formattedFollowage += $"{followage.Seconds} seconds";
-      }
-
-      return formattedFollowage;
     }
   }
 }
