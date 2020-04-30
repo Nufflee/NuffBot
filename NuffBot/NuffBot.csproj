@@ -19,7 +19,7 @@
     </Target>
     
     <ItemGroup>
-      <PackageReference Include="Discord.Net" Version="2.1.1" />
+      <PackageReference Include="Discord.Net" Version="2.2.0" />
       <PackageReference Include="DotNetEnv" Version="1.4.0" />
       <PackageReference Include="ServiceStack" Version="5.8.0" />
       <PackageReference Include="ServiceStack.OrmLite" Version="5.8.0" />
