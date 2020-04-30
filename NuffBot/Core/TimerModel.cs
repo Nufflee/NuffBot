@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using NuffBot.Commands;
 using ServiceStack.DataAnnotations;
 
@@ -8,6 +7,7 @@ namespace NuffBot.Core
   {
     [ForeignKey(typeof(CommandModel), OnDelete = "CASCADE")]
     public ulong CommandId { get; set; }
+
     public int TimeTrigger { get; set; }
     public int MessageTrigger { get; set; }
 
@@ -16,11 +16,6 @@ namespace NuffBot.Core
       CommandId = commandId;
       TimeTrigger = timeTrigger;
       MessageTrigger = messageTrigger;
-    }
-
-    public Task<bool> SaveToDatabase(IDatabaseContext database)
-    {
-      return database.WriteAsync(this);
     }
   }
 }

@@ -56,9 +56,17 @@ namespace NuffBot.Commands
           return;
         }
       }
-      
-      dbObject.Entity.Aliases.AddRange(aliases);
 
+      foreach (string alias in aliases)
+      {
+        if (!await new AliasModel(dbObject.Entity.Id, alias).SaveToDatabase(SqliteDatabase.Instance))
+        {
+          bot.SendMessage("Failed to add command to the database.", context);
+
+          return;
+        }
+      }
+      
       if (await dbObject.UpdateInDatabase(SqliteDatabase.Instance))
       {
         bot.SendMessage("Alias(es) added successfully!", context);

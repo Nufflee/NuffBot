@@ -19,6 +19,9 @@ namespace NuffBot
     Task<DatabaseObject<T>> ReadSingleAsync<T>(Expression<Func<T, bool>> predicate)
       where T : DatabaseModel<T>;
 
+    Task<DatabaseObject<T>> ReadSingleByIdAsync<T>(ulong id)
+      where T : DatabaseModel<T>;
+    
     Task<List<DatabaseObject<T>>> ReadAllAsync<T>()
       where T : DatabaseModel<T>;
 

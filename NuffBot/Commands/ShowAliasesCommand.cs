@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NuffBot.Commands
@@ -45,11 +46,11 @@ namespace NuffBot.Commands
         return;
       }
 
-      List<string> aliases = dbObject.Entity.Aliases;
+      List<string> aliases = (await DatabaseHelper.GetAllAliasesOfCommand(dbObject.Entity)).Select(a => a.Entity.Alias).ToList();
 
       if (aliases.Count > 0)
       {
-        bot.SendMessage($"Aliases of command '{name}' are: {string.Join(", ", dbObject.Entity.Aliases)}", context);
+        bot.SendMessage($"Aliases of command '{name}' are: {string.Join(", ", aliases)}", context);
       }
       else
       {

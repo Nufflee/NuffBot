@@ -18,6 +18,26 @@ namespace NuffBot
     private SqliteDatabase(string path)
     {
       OrmLiteConnectionFactory factory = new OrmLiteConnectionFactory(path, SqliteOrmLiteDialectProvider.Instance);
+
+      SqliteOrmLiteDialectProvider.Instance.CreateTableFieldsStrategy = definition =>
+      {
+        List<FieldDefinition> fieldDefs = new List<FieldDefinition>();
+
+        foreach (FieldDefinition def in definition.FieldDefinitions)
+        {
+          if (def.Name == "Id")
+          {
+            fieldDefs.Insert(0, def);
+          }
+          else
+          {
+            fieldDefs.Add(def);
+          }
+        }
+
+        return fieldDefs;
+      };
+
       Connection = factory.OpenDbConnection();
 
       if (Connection.State != ConnectionState.Open)
@@ -27,7 +47,7 @@ namespace NuffBot
 
       Connection.ExecuteSql("PRAGMA foreign_keys = ON;");
 
-      foreach (Type tableType in AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => typeof(DatabaseModel<>).IsAssignableFrom(t) && t != typeof(DatabaseModel<>)).ToArray())
+      foreach (Type tableType in AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => t.IsAssignableFromGeneric(typeof(DatabaseModel<>)) && t != typeof(DatabaseModel<>)).ToArray())
       {
         Connection.CreateTableIfNotExists(tableType);
       }
@@ -40,10 +60,10 @@ namespace NuffBot
       return Instance;
     }
 
-    public async Task<bool> WriteAsync<T>(T entity)
+    public Task<bool> WriteAsync<T>(T entity)
       where T : DatabaseModel<T>
     {
-      return await Connection.SaveAsync(entity, true);
+      return Connection.SaveAsync(entity, true);
     }
 
     public async Task<bool> DeleteEntityAsync<T>(T entity)
@@ -64,6 +84,14 @@ namespace NuffBot
       where T : DatabaseModel<T>
     {
       T item = await Connection.SingleAsync(predicate);
+
+      return new DatabaseObject<T>(item);
+    }
+
+    public async Task<DatabaseObject<T>> ReadSingleByIdAsync<T>(ulong id)
+      where T : DatabaseModel<T>
+    {
+      T item = await Connection.SingleByIdAsync<T>(id);
 
       return new DatabaseObject<T>(item);
     }

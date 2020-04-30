@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NuffBot.Commands
@@ -43,7 +45,9 @@ namespace NuffBot.Commands
         return;
       }
 
-      bot.SendMessage($"Command '{dbObject.Entity.Name}' is defined as: `{dbObject.Entity.Name} [{string.Join(", ", dbObject.Entity.Aliases)}] {dbObject.Entity.Response}`", context);
+      IEnumerable<string> aliases = (await DatabaseHelper.GetAllAliasesOfCommand(dbObject.Entity)).Select(a => a.Entity.Alias);
+      
+      bot.SendMessage($"Command '{dbObject.Entity.Name}' is defined as: `{dbObject.Entity.Name} [{string.Join(", ", aliases)}] {dbObject.Entity.Response}`", context);
     }
   }
 }

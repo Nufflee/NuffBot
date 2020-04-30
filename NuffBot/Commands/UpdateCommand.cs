@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NuffBot.Commands
@@ -50,28 +49,46 @@ namespace NuffBot.Commands
 
       if (aliases != null)
       {
-        dbObject.Entity.Aliases = aliases.ToList();
-        
         foreach (string alias in aliases)
         {
-          if ((await DatabaseHelper.GetCommandByNameOrAlias(alias)).Exists())
+          DatabaseObject<AliasModel> dbAlias = await DatabaseHelper.GetAliasByName(alias);
+
+          if (dbAlias.Exists() && dbAlias.Entity.CommandId != dbObject.Entity.Id)
           {
             bot.SendMessage($"Command with name or alias '{alias}' already exists!", context);
 
             return;
           }
         }
+
+        foreach (DatabaseObject<AliasModel> alias in await DatabaseHelper.GetAllAliasesOfCommand(dbObject.Entity))
+        {
+          await alias.DeleteFromDatabase(SqliteDatabase.Instance);
+        }
+
+        foreach (string alias in aliases)
+        {
+          if (!await new AliasModel(dbObject.Entity.Id, alias).SaveToDatabase(SqliteDatabase.Instance))
+          {
+            bot.SendMessage("Failed to save the updated command to the database!", context);
+
+            return;
+          }
+        }
       }
 
-      dbObject.Entity.Response = response;
+      if (!string.IsNullOrWhiteSpace(response))
+      {
+        dbObject.Entity.Response = response;
 
-      if (await dbObject.UpdateInDatabase(SqliteDatabase.Instance))
-      {
-        bot.SendMessage($"Command '{name}' updated successfully!", context);
-      }
-      else
-      {
-        bot.SendMessage("Failed to save the updated command to the database!", context);
+        if (await dbObject.UpdateInDatabase(SqliteDatabase.Instance))
+        {
+          bot.SendMessage($"Command '{name}' updated successfully!", context);
+        }
+        else
+        {
+          bot.SendMessage("Failed to save the updated command to the database!", context);
+        }
       }
     }
   }

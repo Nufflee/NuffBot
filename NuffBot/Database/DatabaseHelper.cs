@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using NuffBot.Commands;
 using NuffBot.Core;
@@ -20,31 +19,46 @@ namespace NuffBot
       return dbCommand;
     }
 
-    public static async Task<List<DatabaseObject<CommandModel>>> GetAllCommands()
+    public static Task<List<DatabaseObject<CommandModel>>> GetAllCommands()
     {
-      return await SqliteDatabase.Instance.ReadAllAsync<CommandModel>();
+      return SqliteDatabase.Instance.ReadAllAsync<CommandModel>();
     }
 
     public static async Task<DatabaseObject<CommandModel>> GetCommandByAlias(string alias)
     {
-      List<DatabaseObject<CommandModel>> allCommands = await GetAllCommands();
+      DatabaseObject<AliasModel> dbAlias = await GetAliasByName(alias);
 
-      return new DatabaseObject<CommandModel>(allCommands.Select((c) => c.Entity).FirstOrDefault(c => c.Aliases.Contains(alias)));
+      if (dbAlias.Exists())
+      {
+        return await SqliteDatabase.Instance.ReadSingleByIdAsync<CommandModel>(dbAlias.Entity.CommandId);
+      }
+
+      return DatabaseObject<CommandModel>.Empty;
     }
 
-    public static async Task<DatabaseObject<TimerModel>> GetTimerByCommand(CommandModel command)
+    public static Task<DatabaseObject<AliasModel>> GetAliasByName(string alias)
     {
-      return await SqliteDatabase.Instance.ReadSingleAsync<TimerModel>((t) => t.CommandId == command.Id);
+      return SqliteDatabase.Instance.ReadSingleAsync<AliasModel>((a) => a.Alias == alias);
     }
 
-    public static async Task<List<DatabaseObject<TimerModel>>> GetAllTimers()
+    public static Task<List<DatabaseObject<AliasModel>>> GetAllAliasesOfCommand(CommandModel command)
     {
-      return await SqliteDatabase.Instance.ReadAllAsync<TimerModel>();
+      return SqliteDatabase.Instance.ReadAllAsync<AliasModel>((a) => a.CommandId == command.Id);
     }
 
-    public static async Task<DatabaseObject<CommandModel>> GetCommandById(ulong id)
+    public static Task<DatabaseObject<TimerModel>> GetTimerByCommand(CommandModel command)
     {
-      return await SqliteDatabase.Instance.ReadSingleAsync<CommandModel>((c) => c.Id == id);
+      return SqliteDatabase.Instance.ReadSingleAsync<TimerModel>((t) => t.CommandId == command.Id);
+    }
+
+    public static Task<List<DatabaseObject<TimerModel>>> GetAllTimers()
+    {
+      return SqliteDatabase.Instance.ReadAllAsync<TimerModel>();
+    }
+
+    public static Task<DatabaseObject<CommandModel>> GetCommandById(ulong id)
+    {
+      return SqliteDatabase.Instance.ReadSingleByIdAsync<CommandModel>(id);
     }
   }
 }

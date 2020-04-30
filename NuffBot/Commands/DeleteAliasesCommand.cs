@@ -49,9 +49,7 @@ namespace NuffBot.Commands
           continue;
         }
 
-        dbObject.Entity.Aliases.Remove(alias);
-
-        if (await dbObject.UpdateInDatabase(SqliteDatabase.Instance))
+        if (await (await DatabaseHelper.GetAliasByName(alias)).DeleteFromDatabase(SqliteDatabase.Instance))
         {
           count++;
         }

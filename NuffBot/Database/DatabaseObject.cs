@@ -6,6 +6,8 @@ namespace NuffBot
   public class DatabaseObject<T>
     where T : DatabaseModel<T>
   {
+    public static DatabaseObject<T> Empty => new DatabaseObject<T>(null);
+    
     public T Entity { get; }
     
     public DatabaseObject(T entity)

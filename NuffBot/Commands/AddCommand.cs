@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NuffBot.Commands
@@ -58,16 +57,26 @@ namespace NuffBot.Commands
         }
       }
 
-      CommandModel command = new CommandModel(name, aliases.ToList(), response);
+      CommandModel command = new CommandModel(name, response);
 
       if (!await command.SaveToDatabase(SqliteDatabase.Instance))
       {
         bot.SendMessage("Failed to add command to the database.", context);
+
+        return;
       }
-      else
+
+      foreach (string alias in aliases)
       {
-        bot.SendMessage($"Command '{name}' added successfully!", context);
+        if (!await new AliasModel(command.Id, alias).SaveToDatabase(SqliteDatabase.Instance))
+        {
+          bot.SendMessage("Failed to add command to the database.", context);
+
+          return;
+        }
       }
+      
+      bot.SendMessage($"Command '{name}' added successfully!", context);
     }
   }
 }
