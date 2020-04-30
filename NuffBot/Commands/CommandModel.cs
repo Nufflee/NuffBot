@@ -3,7 +3,7 @@ using ServiceStack.DataAnnotations;
 
 namespace NuffBot.Commands
 {
-  public class CommandModel : DatabaseModel
+  public class CommandModel : DatabaseModel<CommandModel>
   {
     [Unique] public string Name { get; set; }
     public List<string> Aliases { get; set; }

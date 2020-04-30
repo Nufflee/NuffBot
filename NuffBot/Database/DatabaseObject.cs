@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace NuffBot
 {
   public class DatabaseObject<T>
-    where T : DatabaseModel
+    where T : DatabaseModel<T>
   {
     public T Entity { get; }
     

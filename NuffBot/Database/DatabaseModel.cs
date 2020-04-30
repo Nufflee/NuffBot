@@ -4,7 +4,8 @@ using ServiceStack.DataAnnotations;
 
 namespace NuffBot
 {
-  public abstract class DatabaseModel
+  public abstract class DatabaseModel<T>
+    where T : DatabaseModel<T>
   {
     [AutoIncrement] public virtual ulong Id { get; set; }
     public virtual DateTime? CreationTimestamp { get; set; }
@@ -14,7 +15,7 @@ namespace NuffBot
     {
       CreationTimestamp = LastUpdateTimestamp = DateTime.UtcNow;
       
-      return database.WriteAsync(this);
+      return database.WriteAsync((T)this);
     }
   }
 }
