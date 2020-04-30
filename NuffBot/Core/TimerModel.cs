@@ -4,10 +4,8 @@ using ServiceStack.DataAnnotations;
 
 namespace NuffBot.Core
 {
-  public class TimerModel : IDatabaseObject
+  public class TimerModel : DatabaseModel
   {
-    [AutoIncrement] public ulong Id { get; set; }
-
     [ForeignKey(typeof(CommandModel), OnDelete = "CASCADE")]
     public ulong CommandId { get; set; }
     public int TimeTrigger { get; set; }

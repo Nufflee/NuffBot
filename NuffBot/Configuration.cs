@@ -9,6 +9,7 @@ namespace NuffBot
     public static string TwitchBotOAuth { get;  } = GetEnvironmentVariable("TwitchBotOAuth");
     public static string TwitchClientId { get; } = GetEnvironmentVariable("TwitchClientId");
     public static string DiscordToken { get; } = GetEnvironmentVariable("DiscordToken");
+    public static string DatabasePath { get; } = GetEnvironmentVariable("DatabasePath");
 
     private static string GetEnvironmentVariable(string name)
     {
