@@ -1,10 +1,9 @@
-using System;
 using System.Threading.Tasks;
 
 namespace NuffBot
 {
   public class DatabaseObject<T>
-    where T : DatabaseModel<T>
+    where T : DatabaseModelBase<T>
   {
     public static DatabaseObject<T> Empty => new DatabaseObject<T>(null);
     
@@ -17,7 +16,7 @@ namespace NuffBot
 
     public async Task<bool> UpdateInDatabase(IDatabaseContext database)
     {
-      Entity.LastUpdateTimestamp = DateTime.UtcNow;
+      Entity.OnUpdateInDatabase();
 
       return await database.UpdateAsync(Entity);
     }

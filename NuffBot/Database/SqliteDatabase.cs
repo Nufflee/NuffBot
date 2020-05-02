@@ -47,7 +47,7 @@ namespace NuffBot
 
       Connection.ExecuteSql("PRAGMA foreign_keys = ON;");
 
-      foreach (Type tableType in AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => t.IsAssignableFromGeneric(typeof(DatabaseModel<>)) && t != typeof(DatabaseModel<>)).ToArray())
+      foreach (Type tableType in AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).Where(t => t.IsAssignableFromGeneric(typeof(DatabaseModelBase<>)) && t != typeof(DatabaseModelBase<>)).ToArray())
       {
         Connection.CreateTableIfNotExists(tableType);
       }
@@ -61,27 +61,27 @@ namespace NuffBot
     }
 
     public Task<bool> WriteAsync<T>(T entity)
-      where T : DatabaseModel<T>
+      where T : DatabaseModelBase<T>
     {
       return Connection.SaveAsync(entity, true);
     }
 
     public async Task<bool> DeleteEntityAsync<T>(T entity)
-      where T : DatabaseModel<T>
+      where T : DatabaseModelBase<T>
     {
       // This may need to be != 0.
       return await Connection.DeleteAsync(entity) > 0;
     }
 
     public async Task<bool> DeleteAsync<T>(Expression<Func<T, bool>> predicate)
-      where T : DatabaseModel<T>
+      where T : DatabaseModelBase<T>
     {
       // This may need to be != 0.
       return await Connection.DeleteAsync(predicate) > 0;
     }
 
     public async Task<DatabaseObject<T>> ReadSingleAsync<T>(Expression<Func<T, bool>> predicate)
-      where T : DatabaseModel<T>
+      where T : DatabaseModelBase<T>
     {
       T item = await Connection.SingleAsync(predicate);
 
@@ -89,7 +89,7 @@ namespace NuffBot
     }
 
     public async Task<DatabaseObject<T>> ReadSingleByIdAsync<T>(ulong id)
-      where T : DatabaseModel<T>
+      where T : DatabaseModelBase<T>
     {
       T item = await Connection.SingleByIdAsync<T>(id);
 
@@ -97,7 +97,7 @@ namespace NuffBot
     }
 
     public async Task<List<DatabaseObject<T>>> ReadAllAsync<T>()
-      where T : DatabaseModel<T>
+      where T : DatabaseModelBase<T>
     {
       List<T> items = await Connection.LoadSelectAsync(Connection.From<T>());
 
@@ -105,7 +105,7 @@ namespace NuffBot
     }
 
     public async Task<List<DatabaseObject<T>>> ReadAllAsync<T>(Expression<Func<T, bool>> predicate)
-      where T : DatabaseModel<T>
+      where T : DatabaseModelBase<T>
     {
       List<T> items = await Connection.LoadSelectAsync(predicate);
 
@@ -113,7 +113,7 @@ namespace NuffBot
     }
 
     public async Task<bool> UpdateAsync<T>(T entity)
-      where T : DatabaseModel<T>
+      where T : DatabaseModelBase<T>
     {
       int result = await Connection.UpdateAsync(entity);
 
