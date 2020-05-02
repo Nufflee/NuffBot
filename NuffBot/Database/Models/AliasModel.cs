@@ -12,9 +12,9 @@ namespace NuffBot.Commands
 
     public DateTime CreationTimestamp { get; set; }
 
-    public AliasModel(ulong commandId, string alias)
+    public AliasModel(CommandModel command, string alias)
     {
-      CommandId = commandId;
+      CommandId = command.Id;
       Alias = alias;
     }
 

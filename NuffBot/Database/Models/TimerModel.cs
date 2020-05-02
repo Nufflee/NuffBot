@@ -16,9 +16,9 @@ namespace NuffBot.Core
     public DateTime CreationTimestamp { get; set; }
     public DateTime LastUpdateTimestamp { get; set; }
 
-    public TimerModel(ulong commandId, int timeTrigger, int messageTrigger)
+    public TimerModel(CommandModel command, int timeTrigger, int messageTrigger)
     {
-      CommandId = commandId;
+      CommandId = command.Id;
       TimeTrigger = timeTrigger;
       MessageTrigger = messageTrigger;
     }

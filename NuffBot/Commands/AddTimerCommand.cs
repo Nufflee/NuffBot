@@ -69,7 +69,7 @@ namespace NuffBot.Commands
         return;
       }
 
-      TimerModel timer = new TimerModel(dbObject.Entity.Id, timeTrigger, messageTrigger);
+      TimerModel timer = new TimerModel(dbObject.Entity, timeTrigger, messageTrigger);
 
       if (!await timer.SaveToDatabase(SqliteDatabase.Instance))
       {

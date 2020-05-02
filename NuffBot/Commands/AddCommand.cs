@@ -68,7 +68,7 @@ namespace NuffBot.Commands
 
       foreach (string alias in aliases)
       {
-        if (!await new AliasModel(command.Id, alias).SaveToDatabase(SqliteDatabase.Instance))
+        if (!await new AliasModel(command, alias).SaveToDatabase(SqliteDatabase.Instance))
         {
           bot.SendMessage("Failed to add command to the database.", context);
 
