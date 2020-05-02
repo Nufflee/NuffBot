@@ -34,7 +34,7 @@ namespace NuffBot.Discord
     
     private Task WhenReady()
     {
-      Console.WriteLine($"Discord bot connected!");
+      Console.WriteLine("Discord bot connected!");
 
       CurrentGuild = client.Guilds.FirstNonDefault();
       Id = client.CurrentUser.Id;
@@ -56,6 +56,11 @@ namespace NuffBot.Discord
 
     public override async void SendMessage(string message, CommandContext context)
     {
+      if (string.IsNullOrWhiteSpace(message))
+      {
+        return;
+      }
+      
       await ((DiscordCommandContext) context).DiscordChannel.SendMessageAsync(message);
     }
 
