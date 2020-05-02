@@ -19,6 +19,8 @@ namespace NuffBot
     {
       OrmLiteConnectionFactory factory = new OrmLiteConnectionFactory(path, SqliteOrmLiteDialectProvider.Instance);
 
+      SqliteOrmLiteDialectProvider.Instance.NamingStrategy = new RemoveSuffixNamingStrategy("Model");
+
       SqliteOrmLiteDialectProvider.Instance.CreateTableFieldsStrategy = definition =>
       {
         List<FieldDefinition> fieldDefs = new List<FieldDefinition>();
