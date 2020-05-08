@@ -10,6 +10,7 @@ namespace NuffBot.Commands
     [Required] public string Response { get; set; }
     public DateTime CreationTimestamp { get; set; }
     public DateTime LastUpdateTimestamp { get; set; }
+    public bool IsStaticCommand { get; set; }
 
     public CommandModel(string name, string response)
     {

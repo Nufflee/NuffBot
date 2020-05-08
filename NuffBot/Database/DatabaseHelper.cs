@@ -1,15 +1,23 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NuffBot.Commands;
 using NuffBot.Core;
+using NuffBot.Database.Models;
 
 namespace NuffBot
 {
   public static class DatabaseHelper
   {
+    public static Task<DatabaseObject<CommandModel>> GetCommandByName(string name)
+    {
+      return SqliteDatabase.Instance.ReadSingleAsync<CommandModel>(c => c.Name == name);
+    }
+
     public static async Task<DatabaseObject<CommandModel>> GetCommandByNameOrAlias(string name)
     {
-      DatabaseObject<CommandModel> dbCommand = await SqliteDatabase.Instance.ReadSingleAsync<CommandModel>(c => c.Name == name);
+      DatabaseObject<CommandModel> dbCommand = await GetCommandByName(name);
 
       if (!dbCommand.Exists())
       {
@@ -59,6 +67,13 @@ namespace NuffBot
     public static Task<DatabaseObject<CommandModel>> GetCommandById(ulong id)
     {
       return SqliteDatabase.Instance.ReadSingleByIdAsync<CommandModel>(id);
+    }
+
+    public static async Task<DatabaseObject<CommandMetricsModel>> GetCommandMetricsByCommand(CommandModel command)
+    {
+      List<DatabaseObject<CommandMetricsModel>> metrics = await SqliteDatabase.Instance.ReadAllAsync<CommandMetricsModel>((m) => m.CommandId == command.Id);
+
+      return metrics.FirstOrDefault((m) => m.Entity.Date.AddHours(1) >= DateTime.UtcNow) ?? DatabaseObject<CommandMetricsModel>.Empty;
     }
   }
 }

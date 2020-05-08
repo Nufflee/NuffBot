@@ -4,18 +4,14 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using NuffBot.Core;
+using NuffBot.Database.Models;
 using NuffBot.Discord;
 
 namespace NuffBot.Commands
 {
   public static class CommandProcessor
   {
-    private static readonly List<Command> staticCommands;
-
-    static CommandProcessor()
-    {
-      staticCommands = Assembly.GetExecutingAssembly().GetTypes().Where(type => typeof(Command).IsAssignableFrom(type) && type != typeof(Command)).Select(Activator.CreateInstance).Cast<Command>().ToList();
-    }
+    public static IEnumerable<Command> StaticCommands { get; } = Assembly.GetExecutingAssembly().GetTypes().Where(type => typeof(Command).IsAssignableFrom(type) && type != typeof(Command)).Select(Activator.CreateInstance).Cast<Command>().ToList();
 
     public static async Task ProcessCommand<TUser>(ChatMessage<TUser> chatMessage, Bot bot)
       where TUser : User
@@ -28,11 +24,11 @@ namespace NuffBot.Commands
       string message = chatMessage.Content;
       string name = message.TrimStart('!').Split(' ')[0].ToLower();
 
-      Command commandToExecute = staticCommands.FirstOrDefault(command => command.Name == name);
+      DatabaseObject<CommandModel> commandToExecute = await DatabaseHelper.GetCommandByNameOrAlias(name);
 
-      if (commandToExecute == null)
+      if (!commandToExecute.Exists())
       {
-        commandToExecute = staticCommands.FirstOrDefault(command => command.Aliases.Any(alias => alias == name));
+        return;
       }
 
       CommandContext context = new CommandContext(DiscordBot.CurrentGuild, TwitchBot.CurrentChannel);
@@ -42,24 +38,36 @@ namespace NuffBot.Commands
         context = new DiscordCommandContext(context, discordChatMessage.Channel);
       }
 
-      if (commandToExecute == null)
+      if (commandToExecute.Entity.IsStaticCommand)
       {
-        DatabaseObject<CommandModel> dbCommand = await DatabaseHelper.GetCommandByNameOrAlias(name);
+        Command staticCommands = StaticCommands.First((c) => c.Name == name);
 
-        if (dbCommand.Exists())
+        if (chatMessage.Sender.UserLevel < staticCommands.UserLevel)
         {
-          bot.SendMessage(dbCommand.Entity.Response, context);
+          return;
         }
 
-        return;
+        staticCommands.DoExecute(chatMessage, bot, context);
       }
-
-      if (chatMessage.Sender.UserLevel < commandToExecute.UserLevel)
+      else
       {
-        return;
+        bot.SendMessage(commandToExecute.Entity.Response, context);
       }
 
-      commandToExecute.DoExecute(chatMessage, bot, context);
+      DatabaseObject<CommandMetricsModel> dbMetrics = await DatabaseHelper.GetCommandMetricsByCommand(commandToExecute.Entity);
+
+      if (dbMetrics.Exists())
+      {
+        dbMetrics.Entity.ExecutionCount++;
+
+        await dbMetrics.UpdateInDatabase(SqliteDatabase.Instance);
+      }
+      else
+      {
+        CommandMetricsModel metrics = new CommandMetricsModel(commandToExecute.Entity);
+
+        await metrics.SaveToDatabase(SqliteDatabase.Instance);
+      }
     }
   }
 }

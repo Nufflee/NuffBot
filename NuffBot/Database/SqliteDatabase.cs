@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using NuffBot.Commands;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.Sqlite;
 
@@ -59,7 +60,43 @@ namespace NuffBot
     {
       Instance = new SqliteDatabase(path);
 
+      AddStaticCommandsToDatabase();
+
       return Instance;
+    }
+
+    private static async void AddStaticCommandsToDatabase()
+    {
+      foreach (Command command in CommandProcessor.StaticCommands)
+      {
+        DatabaseObject<CommandModel> dbCommand = await DatabaseHelper.GetCommandByName(command.Name);
+
+        if (!dbCommand.Exists())
+        {
+          CommandModel model = new CommandModel(command.Name, "") {IsStaticCommand = true};
+
+          if (!await model.SaveToDatabase(Instance))
+          {
+            // TODO: Log error
+
+            continue;
+          }
+
+          foreach (string alias in command.Aliases)
+          {
+            if (!await new AliasModel(model, alias).SaveToDatabase(Instance))
+            {
+              // TODO: Log error
+
+              break;
+            }
+          }
+        }
+        else if (!dbCommand.Entity.IsStaticCommand)
+        {
+          // TODO: Log error: static and dynamic command name clash.
+        }
+      }
     }
 
     public Task<bool> WriteAsync<T>(T entity)
